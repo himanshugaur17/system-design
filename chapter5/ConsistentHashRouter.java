@@ -2,9 +2,7 @@ package chapter5;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,7 +20,8 @@ public class ConsistentHashRouter {
     }
 
     private void assignVirtualNodesOnHashRing(List<VirtualNode> virtualNodes, int keyRangeUpperBound) {
-        
+        virtualNodes.stream()
+                .forEach(vNode -> hashRing.put(vNode.hashCode() % keyRangeUpperBound, vNode));
     }
 
     private List<VirtualNode> createVirtualServers(List<PhysicalNode> physicalServers) {
@@ -32,5 +31,12 @@ public class ConsistentHashRouter {
                 .flatMap(vNodes -> vNodes.stream())
                 .collect(Collectors.toList());
 
+    }
+
+    public void analyzeDistribution() {
+        hashRing.entrySet()
+                .stream()
+                .forEach(entry -> System.out.println(String.format("Key %s on hash ring assigned to pNode-> %s",
+                        entry.getKey(), entry.getValue().getPhysicalNode())));
     }
 }

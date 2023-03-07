@@ -46,4 +46,12 @@ public class VirtualNode {
         return true;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public PhysicalNode getPhysicalNode() {
+        return physicalNode;
+    }
+
 }

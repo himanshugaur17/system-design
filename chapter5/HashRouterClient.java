@@ -2,8 +2,7 @@ package chapter5;
 
 public class HashRouterClient {
     public static void main(String[] args){
-        int physicalServers=4;
-        int virtualNodes=6;
-        
+        ConsistentHashRouter consistentHashRouter=new ConsistentHashRouter(4, 6, 100);
+        consistentHashRouter.analyzeDistribution();
     }
 }
