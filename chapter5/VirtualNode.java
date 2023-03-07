@@ -21,7 +21,7 @@ public class VirtualNode {
     }
 
     private int getSomeRandomInteger() {
-        return new Random().nextInt();
+        return new Random().nextInt(7);
     }
 
     @Override

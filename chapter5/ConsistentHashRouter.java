@@ -1,8 +1,11 @@
 package chapter5;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -37,6 +40,13 @@ public class ConsistentHashRouter {
         hashRing.entrySet()
                 .stream()
                 .forEach(entry -> System.out.println(String.format("Key %s on hash ring assigned to pNode-> %s",
-                        entry.getKey(), entry.getValue().getPhysicalNode())));
+                        entry.getKey(), entry.getValue().getPhysicalNode().getNodeId())));
+        hashRing.entrySet()
+                .stream()
+                .collect(Collectors.groupingBy(entry -> entry.getValue().getPhysicalNode(),
+                        Collectors.mapping(entry -> entry.getKey(), Collectors.toList())))
+                .entrySet()
+                .forEach(entry -> String.format("Total partitions assigned to %s are %s", entry.getKey().getNodeId(),
+                        entry.getValue().size()));
     }
 }
