@@ -1,8 +1,6 @@
 package chapter5;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /* Cache server to mimick the real nodes */
@@ -15,22 +13,12 @@ public class CacheServer {
      * It also helps in efficient re-distribution of keys during scaling out/in.
      */
 
-    private Integer virtualNodes;
+    private final Integer virtualNodes;
     private Map<Integer, Employee> cache;
-    private List<Range> keyRange = new ArrayList<Range>();
-
-    public List<Range> getKeyRange() {
-        return keyRange;
-    }
-
-    public void setKeyRange(List<Range> keyRange) {
-        this.keyRange = keyRange;
-    }
 
     public CacheServer(Integer virtualNodes, Integer cacheServerId) {
         this.virtualNodes = virtualNodes;
         this.cache = new HashMap<>();
-        this.keyRange = new ArrayList<Range>();
         this.cacheServerId = cacheServerId;
     }
 
