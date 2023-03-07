@@ -1,7 +1,9 @@
 package chapter5;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,17 +27,23 @@ public class DistributedCacheManager {
         int perVirtualNode = keyRange / virtualResCount;
         int rem = keyRange % virtualResCount;
         int cycleCount = 0;
-        if (rem != 0)
-            cacheServerList.get(0).getKeyRange().add(new Range(-1, rem));
+        Map<Range, CacheServer> cacheServerMap = new HashMap<>();
+        if (rem != 0) {
+            Range e = new Range(-1, rem);
+            cacheServerList.get(0).getKeyRange().add(e);
+            cacheServerMap.put(e, cacheServerList.get(0));
+        }
         while (cycleCount != virtualNodes) {
             for (int j = 0; j < cacheServerList.size(); j++) {
                 int lowerBound = cycleCount * j * perVirtualNode - 1 + rem;
+                Range e = new Range(lowerBound, Math.min(keyRange, lowerBound + perVirtualNode));
                 cacheServerList.get(j).getKeyRange()
-                        .add(new Range(lowerBound, Math.min(keyRange, lowerBound + perVirtualNode)));
+                        .add(e);
+                cacheServerMap.put(e, cacheServerList.get(j));
             }
             cycleCount++;
         }
-        return null;
+        return cacheServerMap;
     }
 
     public Employee getEmployee(int key) {
