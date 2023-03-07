@@ -9,4 +9,12 @@ public class PhysicalNode {
         this.virtualNodes = virtualNodes;
     }
 
+    public Integer getNodeId() {
+        return nodeId;
+    }
+
+    public Integer getVirtualNodes() {
+        return virtualNodes;
+    }
+
 }

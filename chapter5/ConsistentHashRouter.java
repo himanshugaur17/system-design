@@ -9,21 +9,27 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ConsistentHashRouter {
-    private TreeMap<Integer,VirtualNode> hashRing=new TreeMap<>();
-    private List<PhysicalNode> physicalNodes=new ArrayList<>();
-    public ConsistentHashRouter(int physicalServers, int virtualNodesCount, int keyRangeUpperBound){
-        int totalvNodes=physicalServers*virtualNodesCount;
-        
-        physicalNodes=IntStream.range(0, physicalServers)
-        .mapToObj(i->new PhysicalNode(i,virtualNodesCount))
-        .collect(Collectors.toList());
+    private TreeMap<Integer, VirtualNode> hashRing = new TreeMap<>();
+    private List<PhysicalNode> physicalNodes = new ArrayList<>();
 
-        List<VirtualNode> virtualNodes=createVirtualServers(physicalNodes,virtualNodesCount);
-        assignVirtualNodesOnHashRing(virtualNodes,keyRangeUpperBound);
+    public ConsistentHashRouter(int physicalServers, int virtualNodesCount, int keyRangeUpperBound) {
+        physicalNodes = IntStream.range(0, physicalServers)
+                .mapToObj(i -> new PhysicalNode(i, virtualNodesCount))
+                .collect(Collectors.toList());
+
+        List<VirtualNode> virtualNodes = createVirtualServers(physicalNodes);
+        assignVirtualNodesOnHashRing(virtualNodes, keyRangeUpperBound);
     }
+
     private void assignVirtualNodesOnHashRing(List<VirtualNode> virtualNodes, int keyRangeUpperBound) {
     }
-    private List<VirtualNode> createVirtualServers(List<PhysicalNode> physicalNodes2, int virtualNodesCount) {
-        return null;
+
+    private List<VirtualNode> createVirtualServers(List<PhysicalNode> physicalServers) {
+        return physicalServers.stream()
+                .map(node -> IntStream.range(0, node.getVirtualNodes()).mapToObj(id -> new VirtualNode(id, node))
+                        .collect(Collectors.toList()))
+                .flatMap(vNodes -> vNodes.stream())
+                .collect(Collectors.toList());
+
     }
 }
