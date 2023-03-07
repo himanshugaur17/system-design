@@ -22,6 +22,7 @@ public class ConsistentHashRouter {
     }
 
     private void assignVirtualNodesOnHashRing(List<VirtualNode> virtualNodes, int keyRangeUpperBound) {
+        
     }
 
     private List<VirtualNode> createVirtualServers(List<PhysicalNode> physicalServers) {
