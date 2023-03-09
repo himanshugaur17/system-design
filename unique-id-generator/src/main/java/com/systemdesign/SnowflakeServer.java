@@ -2,10 +2,13 @@ package com.systemdesign;
 
 import java.time.Instant;
 
+import lombok.extern.slf4j.Slf4j;
+
 /*
  * SnowFlakeServer to mimic servers in twitter snowflake architecture
  * It will create a 64 bit id
  */
+@Slf4j
 public class SnowflakeServer {
     private static final int EPOCH_BITS_COUNT = 41;
     private static final int DATA_CENTER_BITS_COUNT = 5; /* 32 data center */
@@ -44,13 +47,16 @@ public class SnowflakeServer {
          */
         long currentTimeStamp = getReferencedTimeStamp();
         if (currentTimeStamp == lastTimeStamp && sequence == MAX_SEQUENCE) {
-            System.out.println("we have to wait for 1ms");
+            log.info("we have to wait for 1ms");
             currentTimeStamp = blockingWaitForMilliSeconds(1, currentTimeStamp);
         } else {
             sequence = 0;
         }
         lastTimeStamp = currentTimeStamp;
-        return formId(currentTimeStamp, sequence);
+        long id = formId(currentTimeStamp, sequence);
+
+        log.info("snowlflake node {} present in data center {} generated unique id: {}", machineId, dataCenterId, id);
+        return id;
     }
 
     private long formId(long currentTimeStamp, int sequence) {
@@ -65,7 +71,8 @@ public class SnowflakeServer {
     }
 
     private long blockingWaitForMilliSeconds(int i, long currentTimeStamp) {
-        while (getReferencedTimeStamp() - currentTimeStamp != i);
+        while (getReferencedTimeStamp() - currentTimeStamp != i)
+            ;
         return getReferencedTimeStamp();
     }
 }
