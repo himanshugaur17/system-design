@@ -6,14 +6,24 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 
-public class Executor implements Watcher{
+import com.systemdesign.zookeeper.monitor.DataMonitor;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class Executor implements Watcher {
     private ZooKeeper zooKeeper;
-    public Executor(String host, String zNode) throws IOException{
-        this.zooKeeper=new ZooKeeper(host, 3000, this);
+    private DataMonitor dataMonitor;
+
+    public Executor(String host, String zNode) throws IOException {
+        log.info("intializing executor class, wrapping zookeeper connection");
+        this.zooKeeper = new ZooKeeper(host, 3000, this);
+        this.dataMonitor = new DataMonitor(zooKeeper, zNode);
     }
+
     @Override
     public void process(WatchedEvent event) {
-        // TODO Auto-generated method stub
-        
+        log.info("executor recieved watch event: {}", event);
+        dataMonitor.processWatchedEvent(event);
     }
 }
