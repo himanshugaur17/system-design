@@ -18,6 +18,7 @@ public class DataMonitor implements StatCallback {
 
     public DataMonitor(ZooKeeper zooKeeper, String zNode) {
         this.zooKeeper = zooKeeper;
+        this.zNode=zNode;
         this.zooKeeper.exists(zNode, true, this, null); /* This is where watch is being set */
     }
 
@@ -75,6 +76,7 @@ public class DataMonitor implements StatCallback {
                      * The client connection from one server of the ensemble
                      * has been transferred to another
                      */
+                    log.info("connection transferred");
                     break;
                 case Expired:
                     /*
@@ -82,20 +84,17 @@ public class DataMonitor implements StatCallback {
                      * create a new connection by creating a new Zookeeper object specifying
                      * the host url
                      */
+                    log.info("connection expired");
+                    break;
                 default:
+                    log.info("in default case of event.getStat()");
                     break;
             }
         } else {
             /* This means something has changed */
             log.info("notified for change on zNode path: {}", path);
             /* Let's get the data for what has changed */
-            String nodeData = new String(this.zooKeeper.getData(zNode, false, null)); /*
-                                                                                       * with watch as false, it will
-                                                                                       * pass true if we have
-                                                                                       * defaultWatcher
-                                                                                       * and watch will be reset on the
-                                                                                       * zNode path
-                                                                                       */
+            String nodeData = new String(this.zooKeeper.getData(zNode, true, null)); 
             log.info("data from zNode: {}", nodeData);
         }
     }

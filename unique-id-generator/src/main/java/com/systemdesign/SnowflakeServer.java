@@ -55,7 +55,7 @@ public class SnowflakeServer {
         lastTimeStamp = currentTimeStamp;
         long id = formId(currentTimeStamp, sequence);
 
-        log.info("snowlflake node {} present in data center {} generated unique id: {}", machineId, dataCenterId, id);
+        log.info("snowlflake node {} present in data center {} generated unique id: {}", machineId, dataCenterId);
         return id;
     }
 

@@ -21,6 +21,10 @@ public class Executor implements Watcher {
         this.zooKeeper = new ZooKeeper(host, 3000, this);
         this.dataMonitor = new DataMonitor(zooKeeper, zNode);
     }
+    public static void main(String []args) throws IOException{
+        Executor executor=new Executor("localhost:2181", "/liveNodes");
+        while(true);
+    }
 
     @Override
     public void process(WatchedEvent event) {
