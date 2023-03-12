@@ -2,6 +2,7 @@ package com.systemdesign.zookeeper;
 
 import java.io.IOException;
 
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -24,6 +25,14 @@ public class Executor implements Watcher {
     @Override
     public void process(WatchedEvent event) {
         log.info("executor recieved watch event: {}", event);
-        dataMonitor.processWatchedEvent(event);
+        try {
+            dataMonitor.processWatchedEvent(event);
+        } catch (KeeperException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
